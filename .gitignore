@@ -1,0 +1,27 @@
+# [inti] ROADMAP v2.3 §0, structure.txt
+
+# Data tidak pernah di-commit (public, internal, standards, firma)
+data/
+
+# Secret dan environment lokal
+.env
+.env.*
+!.env.example
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+
+# MLflow lokal
+mlruns/
+mlartifacts/
+
+# Claude Code: pengaturan lokal per pengguna
+.claude/settings.local.json
+
+# Editor dan OS
+.DS_Store
+Thumbs.db

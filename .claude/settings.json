@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(/data/internal/**)",
+      "Read(/data/firma/**)",
+      "Edit(/data/internal/**)",
+      "Edit(/data/firma/**)"
+    ]
+  },
+  "sandbox": {
+    "enabled": true,
+    "failIfUnavailable": true,
+    "allowUnsandboxedCommands": false,
+    "filesystem": {
+      "denyRead": ["./data/internal", "./data/firma"]
+    }
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Read|Edit|MultiEdit|Write|NotebookEdit|Glob|Grep|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/guard_profile_data.sh",
+            "args": []
+          }
+        ]
+      }
+    ]
+  }
+}

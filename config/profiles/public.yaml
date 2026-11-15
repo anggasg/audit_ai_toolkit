@@ -1,0 +1,46 @@
+# [profil public] Definisi profil public — ROADMAP v2.3 §0, §5.0, §5.5. Tidak berisi secret.
+profil: public
+status: aktif
+tujuan: versi publik, portofolio, dan pelatihan; sekaligus sandbox
+bahasa: en
+
+data:
+  sumber: vynfi_3yr
+  dataset: VynFi/vynfi-group-audit-3yr-medium
+  cadangan: VynFi/vynfi-journal-entries-1m
+  folder: data/public/vynfi
+  pemetaan_kolom: config/sources/vynfi_3yr.yaml   # dibuat di F1
+  lapisan_sintetis: config/synthetic.yaml          # dibuat di F1
+  entitas_mvp: null                                # diisi dari hasil evaluasi VynFi (cek 4)
+
+kalender:
+  sumber: kalender data VynFi
+  akhir_tahun_buku: null                           # diisi dari hasil evaluasi VynFi
+
+penomoran:
+  seri:
+    - kode: GJ
+      cakupan: jurnal R2R + jurnal manual
+      pola: YYMMNNNN
+      reset: bulanan
+      digit_urut: 4
+      kapasitas_per_entitas_per_bulan: 9999
+  catatan: posting otomatis O2C/P2P memakai nomor asal VynFi dan tidak ikut uji urutan di MVP
+
+llm:
+  gateway: litellm
+  rute: anthropic-api                              # API Anthropic langsung
+
+korpus_metodologi:
+  status: belum ditetapkan                         # tiga opsi di ROADMAP §9; prasyarat F3
+  pinjam_indeks: menunggu konfirmasi pagar         # ROADMAP §5.1
+
+akses_claude_code:                                 # berlaku di semua profil (v2.3)
+  data_diizinkan: [data/public/, data/standards/]
+  data_diblok: [data/internal/, data/firma/]
+
+secret: .env lokal
+repo: publik (Apache-2.0)
+on_prem: false
+golden_set: data/public/golden_set/                # F3
+red_flag: config/redflags/public.yaml              # F5
