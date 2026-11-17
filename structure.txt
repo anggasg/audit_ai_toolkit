@@ -1,0 +1,125 @@
+# Struktur rencana v2.5. (Fn) = fase saat file/folder dibuat pada jalur MVP; jalur prototipe: daftar di bawah dan ROADMAP.md §3A, §4.
+# [inti] = berlaku di semua profil; [profil] = berbeda per profil (public, internal, firma); lihat ROADMAP.md §0.
+# [bersama] = data yang dipakai lebih dari satu profil, bukan kode; saat ini hanya data/standards/ untuk pinjam indeks (ROADMAP.md §5.1). Ada di .gitignore, jadi tidak masuk repo mana pun.
+# Repo publik = file [inti] + [profil public] + dokumen + LICENSE; repo privat = file [profil internal]; file [profil firma] tidak masuk repo mana pun sampai profil itu aktif (ROADMAP.md §0).
+# v2.3: tanda di file root dan scripts/ dilengkapi; repo privat audit_ai_internal hanya berisi file [profil internal] (mis. config/profiles/internal.yaml).
+# v2.4: jalur prototipe ditambahkan (ROADMAP.md §3A); tidak ada berkas baru, tanda [inti]/[profil]/[bersama] tetap.
+# v2.5: tidak ada berkas baru; tanda [inti]/[profil]/[bersama] tetap.
+# Berkas utama per fase jalur prototipe. Berkas MVP lain (mis. pages/, app.py, config/litellm.yaml, foundation/audit_trail.py, foundation/llm.py, requirements.lock) tidak dibuat di prototipe; berkas pendukung (mis. pyproject.toml) mengikuti kebutuhan.
+#   F0: semua berkas bertanda (F0) di pohon.
+#   F1: audit_ai/foundation/{profiles,ingest,canonical,numbering,gates,synthetic}.py; config/sources/vynfi_3yr.yaml; config/synthetic.yaml; tests/.
+#   F2: audit_ai/je_testing/sql/; config/je_tests.yaml; audit_ai/mcp_server.py (alat run_je_tests); .mcp.json (server proyek); skill je-testing-spec.
+#   F3: docker/docker-compose.yml (PostgreSQL + pgvector, TEI); audit_ai/rag/{parse,index,retrieve,citations}.py; alat methodology_search dan validate_citations.
+#   F4: audit_ai/process_mining/{event_log,discover,conformance}.py; tabel document dan event_log di canonical.py; alat discover_process; skill process-mining-spec.
+#   F5: audit_ai/keywords/{normalize,rarity,desc_to_account}.py; config/redflags/public.yaml.
+#   F6: audit_ai/mcp_server.py dengan 4 alat (run_je_tests, methodology_search, validate_citations, discover_process); P04 lewat skrip.
+audit_ai_toolkit/
+├── .claude/                         # [inti] konfigurasi Claude Code proyek (F0); jadi plugin di F6
+│   ├── settings.json                # aturan izin + sandbox Bash + hook: satpam data tiga lapis; data/internal/ dan data/firma/ diblok di semua profil (v2.3); sandbox dengan tiga setting (sandbox.enabled, sandbox.failIfUnavailable, sandbox.allowUnsandboxedCommands = false), hanya WSL2/Linux/macOS (v2.4)
+│   ├── hooks/
+│   │   └── guard_profile_data.sh    # di dalam data/ hanya data/public/ dan data/standards/ yang boleh; data/internal/ dan data/firma/ selalu ditolak (v2.3)
+│   └── skills/
+│       ├── je-testing-spec/SKILL.md         # spesifikasi uji P02 per seri (F2)
+│       ├── materiality-workflow/SKILL.md    # RAG → parameter → konfirmasi → kalkulator (F3)
+│       ├── output-schema/SKILL.md           # menurunkan & memperbarui skema lead sheet / audit program (F3)
+│       ├── procedure-library/SKILL.md       # kurasi pustaka prosedur per versi metodologi (F3)
+│       ├── golden-set-eval/SKILL.md         # golden set tanya-jawab + kasus generate, per profil (F3)
+│       └── process-mining-spec/SKILL.md     # event log, relasi_pv_dv, label (F4)
+├── audit_ai/                        # [inti] paket Python
+│   ├── foundation/                  # P00 (F1)
+│   │   ├── profiles.py              # muat & validasi profil aktif dari config/profiles/
+│   │   ├── ingest.py                # Excel (python-calamine) dan Parquet/JSON (DuckDB) + pemetaan kolom per sumber
+│   │   ├── canonical.py             # tabel je_line, je_header, coa, tb, document, event_log
+│   │   ├── numbering.py             # format nomor per seri: pola, aturan reset, jumlah digit, kapasitas
+│   │   ├── gates.py                 # gerbang Pandera: kolom, debit = kredit, GL = TB, kapasitas seri
+│   │   ├── synthetic.py             # lapisan sintetis: seri GJ, waktu entri, user, PV/DV, anomali + kunci jawaban
+│   │   ├── audit_trail.py           # hash input, versi profil, parameter & model, seed → MLflow
+│   │   └── llm.py                   # klien gateway LiteLLM (OpenAI-compatible); rute dari profil
+│   ├── je_testing/                  # P02 (F2)
+│   │   ├── sql/                     # uji deterministik DuckDB per seri: gap, duplikat, YYMM, urutan, post-closing
+│   │   ├── fingerprint.py           # deskripsi dinormalisasi + akun bernominal terbesar
+│   │   ├── consistency.py           # stabilitas posisi NNNN, user modus, komposisi akun
+│   │   ├── robust_z.py              # modified z, leave-one-out, fallback MAD = 0
+│   │   └── isolation_forest.py      # jurnal non-rutin (F6)
+│   ├── rag/                         # P01 (F3)
+│   │   ├── parse.py                 # Docling multi-format → chunk per section + rujukan lokasi
+│   │   ├── index.py                 # embedding (TEI) → pgvector + full-text, per profil
+│   │   ├── retrieve.py              # hybrid search + rerank; aturan pinjam indeks
+│   │   ├── graph.py                 # alur LangGraph dengan persetujuan auditor
+│   │   ├── materiality.py           # kalkulator materialitas + anualisasi
+│   │   ├── sampling.py              # ukuran sampel, bila metodologi punya tabelnya
+│   │   ├── schema_extract.py        # usulan skema lead sheet & audit program + rujukan lokasi
+│   │   ├── procedure_library.py     # pustaka prosedur: ID, area, asersi, risiko, prosedur, rujukan
+│   │   ├── render_template.py       # template Excel kosong dari skema yang disetujui (openpyxl)
+│   │   ├── lead_sheet.py            # isi lead sheet deterministik dari coa + tb + flag
+│   │   ├── audit_program.py         # pilih prosedur dari pustaka; LLM hanya menyesuaikan kalimat
+│   │   └── citations.py             # tolak elemen tanpa rujukan yang valid
+│   ├── process_mining/              # P03 (F4)
+│   │   ├── event_log.py             # case PO / invoice penjualan; relasi_pv_dv
+│   │   ├── discover.py              # directly-follows graph + tabel varian (DuckDB/pandas) + DOT untuk Graphviz
+│   │   ├── conformance.py           # aturan alur standar per relasi_pv_dv → label normal / menyimpang
+│   │   └── tree.py                  # decision tree depth 3–4
+│   ├── keywords/                    # P04 (F5)
+│   │   ├── normalize.py             # singkatan, typo, campuran bahasa; kamus per profil
+│   │   ├── rarity.py                # TF-IDF global & per varian alur
+│   │   └── desc_to_account.py       # char n-gram TF-IDF + logistic regression
+│   └── mcp_server.py                # MVP: 9 tool: methodology_search, propose_output_schema, build_procedure_library, calc_materiality, generate_lead_sheet, generate_audit_program, validate_citations, run_je_tests, discover_process (F2–F4). Prototipe (v2.4): 4 tool, yaitu run_je_tests (F2), methodology_search dan validate_citations (F3), discover_process (F4); satu server utuh di F6
+├── config/
+│   ├── profiles/                    # [profil] (F0)
+│   │   ├── public.yaml              # sumber data, seri & format nomor, rute LLM, kalender, korpus, folder diblok
+│   │   ├── internal.yaml            # idem untuk profil internal; disimpan di repo privat audit_ai_internal
+│   │   └── firma.yaml               # dibuat saat profil firma (Firma Level) diaktifkan
+│   ├── sources/                     # [profil] pemetaan kolom sumber → tabel kanonik (F1)
+│   │   ├── _template.yaml
+│   │   └── vynfi_3yr.yaml
+│   ├── glossary/                    # [profil] istilah metodologi per profil (F3)
+│   ├── redflags/                    # [profil] daftar kata red flag per profil (F5)
+│   ├── synthetic.yaml               # [profil public] lapisan sintetis: seri GJ, waktu entri, user, anomali, seed (F1)
+│   ├── litellm.yaml                 # [inti] daftar rute model; di repo publik hanya rute public, rute profil lain di repo profilnya (F1)
+│   └── je_tests.yaml                # [inti] parameter P02: ambang, minimum observasi, stabilitas (F2)
+├── data/                            # di .gitignore, tidak pernah di-commit
+│   ├── public/                      # [profil public]
+│   │   ├── vynfi/                   # unduhan VynFi 3 tahun (atau 1m) + hash & versi (F0)
+│   │   ├── synthetic/               # hasil lapisan sintetis + kunci jawaban (F1)
+│   │   ├── methodology/             # korpus profil public: GAO Financial Audit Manual Volume 1, edisi Juni 2026 (F3)
+│   │   ├── golden_set/              # (F3)
+│   │   └── derived/                 # skema output, pustaka prosedur, template Excel (F3)
+│   ├── internal/                    # [profil internal] diblok satpam di semua profil
+│   │   ├── methodology/             # file metodologi internal + daftar isi (F0)
+│   │   ├── golden_set/              # (F0–F2)
+│   │   ├── derived/                 # (F3)
+│   │   └── source/                  # data internal nyata (F6, setelah disetujui)
+│   ├── standards/                   # [bersama] korpus standar audit untuk indeks pinjaman, bila disetujui (ROADMAP §5.1)
+│   └── firma/                       # [profil firma] diblok satpam di semua profil; dibuat saat profil firma diaktifkan
+├── docker/
+│   └── docker-compose.yml           # [inti] PostgreSQL + pgvector, LiteLLM, MLflow (F1); TEI (F3). Prototipe (v2.4): dibuat di F3 (PostgreSQL + pgvector dan TEI saja); dijalankan pengguna di luar sandbox (terminal biasa atau lewat prompt !)
+├── pages/                           # [inti] halaman Streamlit
+│   ├── 1_Upload_Validasi.py         # (F1)
+│   ├── 2_JE_Testing.py              # (F2)
+│   ├── 3_Materialitas.py            # (F3)
+│   ├── 4_Alur_Transaksi.py          # (F4)
+│   ├── 5_Kata_Kunci.py              # (F5)
+│   ├── 6_Skema_Output.py            # review & persetujuan skema output (F3)
+│   ├── 7_Pustaka_Prosedur.py        # kurasi pustaka prosedur (F3)
+│   └── 8_Audit_Program.py           # hasilkan & unduh lead sheet + audit program (F3)
+├── scripts/
+│   ├── fetch_vynfi.py               # [profil public] unduh dataset VynFi + catat hash dan commit dataset (F0)
+│   ├── evaluate_vynfi.py            # [profil public] evaluasi 1 hari: 4 cek → eval_report.md, schema.md (F0)
+│   ├── load_secrets.sh              # [inti] muat secret sesuai profil; mekanisme profil non-public disediakan repo profilnya (F0)
+│   └── check_public_terms.sh        # [inti] git pre-push hook: tolak istilah dari daftar terlarang; daftarnya di luar repo publik (F0)
+├── tests/                           # [inti] pytest: gerbang, format nomor, uji urutan, robust z, kalkulator, rujukan, DFG/varian/conformance (F1–F5)
+├── .env.example                     # [inti] nama variabel saja, tanpa nilai; termasuk AUDIT_AI_PROFILE dan LANGSMITH_TRACING=false; di repo publik hanya variabel inti + profil public (F0)
+├── .gitignore                       # [inti] (F0)
+├── .mcp.json                        # [inti] MCP development: Excel, PostgreSQL read-only, context7, repo (F1; dipindah dari F0 di v2.3). Prototipe (v2.4): dibuat di F2 dan hanya memuat server proyek
+├── app.py                           # [inti] halaman utama Streamlit; pilih profil (F1)
+├── CLAUDE.md                        # [inti] prinsip & parameter terkunci untuk setiap sesi Claude Code (F0)
+├── LICENSE                          # [inti] Apache-2.0 untuk repo publik; ada sebelum push publik pertama (F0)
+├── ONBOARDING.md                    # brief, cara memakai project, isi & hubungan antar-dokumen, daftar singkatan
+├── pyproject.toml                   # [inti] konfigurasi pytest & ruff (F1)
+├── README.md
+├── requirements.txt                 # 24 paket inti
+├── requirements.lock                # lock file ber-hash (F1)
+├── ROADMAP.md                       # sumber kebenaran (v2.5)
+├── SEED.md                          # pembuka chat project Claude, per profil
+├── structure.txt
+└── Summary.xlsx                     # ringkasan per program + daftar CP + profil

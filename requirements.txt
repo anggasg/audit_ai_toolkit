@@ -1,0 +1,46 @@
+# Python 3.12.x (versi dicek di F0) — 24 paket inti, versi dikunci; diverifikasi bisa di-resolve bersama untuk Linux/WSL2 (5 Nov 2026; pm4py dikeluarkan 7 Nov 2026, ROADMAP v2.2)
+# Lisensi dicek sebelum paket masuk: tidak ada copyleft kuat (mis. AGPL) di inti; psycopg berlisensi LGPL-3.0 dan dipakai sebagai library
+# Sama untuk semua profil (public, internal, firma); perbedaan konteks diatur di config/profiles/
+# Mesin tanpa GPU: pasang PyTorch CPU dulu, lihat README.md
+# Dataset VynFi (Parquet/JSON) dibaca lewat DuckDB dan diunduh dengan httpx
+# Lock file ber-hash (requirements.lock) dibuat di F1 jalur MVP; di jalur prototipe ditunda (ROADMAP §3A)
+# v2.4: tanpa perubahan paket; 24 paket cukup untuk irisan prototipe F0–F6 dan dicek ulang di tiap fase (ROADMAP §3A, §6)
+# Belum dipakai di prototipe tetapi tetap terpasang: langgraph, langgraph-checkpoint-postgres, langchain-core, langchain-openai, mlflow, streamlit
+
+# Data & validasi (P00, P02)
+pandas==3.1.1
+numpy==2.5.4
+duckdb==2.0.0
+python-calamine==0.9.1
+openpyxl==3.1.5
+pandera==0.35.0
+pydantic==2.14.2
+pyyaml==6.0.3
+
+# Database & vektor (P00, P01)
+sqlalchemy==2.1.8
+psycopg[binary,pool]==3.3.8
+pgvector==0.5.1
+
+# RAG & orkestrasi (P01, P04)
+docling==2.147.0
+langgraph==1.2.19
+langgraph-checkpoint-postgres==3.2.0
+langchain-core==1.7.5
+langchain-openai==1.7.3
+httpx==0.28.1
+
+# ML (P02, P03, P04); process mining P03 memakai DuckDB/pandas + Graphviz CLI, tanpa paket khusus
+scikit-learn==1.9.1
+
+# Tracking, MCP, UI
+mlflow==3.18.0
+mcp==2.3.0
+streamlit==1.66.1
+
+# Lapisan sintetis (F1): nama user & deskripsi
+faker==40.44.0
+
+# Test & lint
+pytest==9.2.0
+ruff==0.17.3
