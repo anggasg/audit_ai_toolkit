@@ -1,6 +1,6 @@
 # 🌱 SEED — Audit AI Toolkit
 
-_Versi 2.5 · 15 November 2026 · Seed untuk chat project; dibuat dari sesi preflight 3–4 November 2026, sesi restrukturisasi 5 November 2026, sesi penyelesaian temuan review 7 November 2026, sesi pengerjaan CP #0 7 November 2026, sesi preflight CP #0 8 November 2026 (jalur prototipe), dan sesi pengerjaan CP #0 di Ubuntu 24.04 11–15 November 2026_
+_Versi 2.6 · 21 November 2026 · Seed untuk chat project; dibuat dari sesi preflight 3–4 November 2026, sesi restrukturisasi 5 November 2026, sesi penyelesaian temuan review 7 November 2026, sesi pengerjaan CP #0 7 November 2026, sesi preflight CP #0 8 November 2026 (jalur prototipe), sesi pengerjaan CP #0 di Ubuntu 24.04 11–15 November 2026, dan sesi uji langsung satpam data 18–21 November 2026_
 
 ---
 
@@ -31,7 +31,7 @@ Catatan unggah:
   - P02 JE testing — urutan & konsistensi nomor jurnal per seri, deviasi nominal
   - P03 Peta alur transaksi — process mining + decision tree
   - P04 Analisis kata kunci — kata jarang, mismatch deskripsi–akun
-- **Status (15 Nov 2026):** fase aktif **F0** (persiapan & definisi profil), berjalan (Status `berjalan`; kriteria CP #0 yang sudah punya bukti: 5, 6, dan 7; kriteria 1 sampai 4 belum), di jalur prototipe (ROADMAP §3A): F0–F1 ditutup CP penuh, F2–F6 ditutup CP-P (checkpoint prototipe), F7 tidak berlaku untuk `public`. Starter kit F0 (satpam data, cek pra-push, profil, skrip VynFi) tersedia; belum ada CP yang lulus.
+- **Status (21 Nov 2026):** fase aktif **F0** (persiapan & definisi profil), berjalan (Status `berjalan`; kriteria CP #0 yang sudah punya bukti: 2, 3, 5, 6, dan 7; kriteria 1 dan 4 belum), di jalur prototipe (ROADMAP §3A): F0–F1 ditutup CP penuh, F2–F6 ditutup CP-P (checkpoint prototipe), F7 tidak berlaku untuk `public`. Starter kit F0 (satpam data, cek pra-push, profil, skrip VynFi) tersedia dan satpam data sudah diuji langsung (ROADMAP §4, §8); belum ada CP yang lulus.
 - **Baseline pengguna:** fasih Excel, VBA, SQL, DAX, M-Code; belum fasih Python dan CLI. Ingin kepanjangan setiap singkatan dijelaskan saat pertama kali dipakai.
 
 ---
@@ -40,7 +40,7 @@ Catatan unggah:
 
 | File | Isi | Dipakai untuk |
 |---|---|---|
-| `ROADMAP.md` v2.5 | Arsitektur inti + profil §0, prinsip §2, fase F0–F7 + CP, jalur prototipe §3A, spesifikasi terkunci §5, tech stack §6, opsi disisihkan §7, risiko §8, pertanyaan terbuka §9 | **Sumber kebenaran** semua keputusan |
+| `ROADMAP.md` v2.6 | Arsitektur inti + profil §0, prinsip §2, fase F0–F7 + CP, jalur prototipe §3A, spesifikasi terkunci §5, tech stack §6, opsi disisihkan §7, risiko §8, pertanyaan terbuka §9 | **Sumber kebenaran** semua keputusan |
 | `Summary.xlsx` | `Sheet1`: satu baris per program, 17 kolom (ID … CP); `CP`: daftar checkpoint + Status, Tanggal lulus, Bukti, jalur prototipe (irisan, gerbang, ditunda ke MVP), dan menit (optimis, realistis, nyata); `Profil`: komponen × profil | Ringkasan cepat & pelacakan status |
 | `README.md` | Overview, profil, aturan data, quick start profil `public` (berlaku setelah CP #1), atribusi data | Onboarding & instalasi |
 | `requirements.txt` | 24 paket Python inti, versi dikunci, Python 3.12 | Dependensi |
@@ -71,12 +71,12 @@ Rincian di ROADMAP.md:
 
 ## 4. Langkah Berikut (F0)
 
-1. Ikuti panduan F0 (Claude Doc "Panduan F0 — Menutup CP #0"): WSL2, Claude Code di dalam WSL2, repo publik dan privat, satpam data (tiga setting sandbox + uji sandbox), cek pra-push, cek AppArmor (fitur keamanan Ubuntu) di Ubuntu 24.04 ke atas, unduh VynFi di laptop lewat terminal biasa (bukan lewat Claude Code) + evaluasi 1 hari, kumpulkan metodologi internal. Bila panduan itu berbeda dari ROADMAP §4 (v2.5), ROADMAP yang berlaku.
+1. Ikuti panduan F0 (Claude Doc "Panduan F0 — Menutup CP #0"): WSL2, Claude Code di dalam WSL2, repo publik dan privat, satpam data (aturan izin, tiga setting sandbox, hook gagal tertutup, mode izin manual, dan ujinya), cek pra-push, cek AppArmor (fitur keamanan Ubuntu) di Ubuntu 24.04 ke atas, unduh VynFi di laptop lewat terminal biasa (bukan lewat Claude Code) + evaluasi 1 hari, kumpulkan metodologi internal. Bila panduan itu berbeda dari ROADMAP §4 (v2.6), ROADMAP yang berlaku.
 2. Kirim bukti ketujuh kriteria CP #0 ke chat CP #0 (bagian `internal.yaml` di kriteria 2 dan kriteria 4 cukup dengan pernyataan pengguna, ROADMAP §3A), lalu pilih entitas MVP dari usulan cek 4 (urutan preferensi: ROADMAP §5.5).
 3. Tutup CP #0 dengan seed `CP0-done.md`, isi Status, Tanggal lulus, Bukti, dan Menit nyata di sheet `CP`, lalu buka chat CP #1 dengan prompt di seed itu.
 4. Paralel, tenggat sebelum CP #2 (tidak menahan prototipe `public`): klasifikasi metodologi internal + pengajuan rute LLM `internal`; pagar pinjam indeks, bila ada profil yang meminjam indeks; golden set `internal` (30–50 pertanyaan + jawaban + rujukan lokasi; prototipe `public` memakai 8–10 pertanyaan uji asap).
 
-Ketujuh kriteria lulus CP #0 ada di ROADMAP §4 (v2.5); rincian sandbox (tiga setting, uji) dan cek AppArmor ada di ROADMAP §4 (F0) dan §8. Di antara pertanyaan terbuka, yang menahan F1 hanya evaluasi VynFi (kriteria CP #0 lainnya tetap wajib); klasifikasi metodologi internal beserta rute LLM `internal`, dan pagar pinjam indeks (bila ada profil yang meminjam indeks), adalah prasyarat F3 dan tidak menahan prototipe `public`. Korpus `public` sudah diputuskan: Financial Audit Manual Volume 1 dari U.S. Government Accountability Office (GAO), lihat ROADMAP §5.1. Daftar lengkap ada di ROADMAP §9.
+Ketujuh kriteria lulus CP #0 ada di ROADMAP §4 (v2.6); rincian satpam (aturan izin, sandbox dengan tiga setting, hook, mode izin, uji) dan cek AppArmor ada di ROADMAP §4 (F0) dan §8. Di antara pertanyaan terbuka, yang menahan F1 hanya evaluasi VynFi (kriteria CP #0 lainnya tetap wajib); klasifikasi metodologi internal beserta rute LLM `internal`, dan pagar pinjam indeks (bila ada profil yang meminjam indeks), adalah prasyarat F3 dan tidak menahan prototipe `public`. Korpus `public` sudah diputuskan: Financial Audit Manual Volume 1 dari U.S. Government Accountability Office (GAO), lihat ROADMAP §5.1. Daftar lengkap ada di ROADMAP §9.
 
 ---
 

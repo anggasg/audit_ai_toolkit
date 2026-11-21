@@ -1,10 +1,11 @@
-# Struktur rencana v2.5. (Fn) = fase saat file/folder dibuat pada jalur MVP; jalur prototipe: daftar di bawah dan ROADMAP.md §3A, §4.
+# Struktur rencana v2.6. (Fn) = fase saat file/folder dibuat pada jalur MVP; jalur prototipe: daftar di bawah dan ROADMAP.md §3A, §4.
 # [inti] = berlaku di semua profil; [profil] = berbeda per profil (public, internal, firma); lihat ROADMAP.md §0.
 # [bersama] = data yang dipakai lebih dari satu profil, bukan kode; saat ini hanya data/standards/ untuk pinjam indeks (ROADMAP.md §5.1). Ada di .gitignore, jadi tidak masuk repo mana pun.
 # Repo publik = file [inti] + [profil public] + dokumen + LICENSE; repo privat = file [profil internal]; file [profil firma] tidak masuk repo mana pun sampai profil itu aktif (ROADMAP.md §0).
 # v2.3: tanda di file root dan scripts/ dilengkapi; repo privat audit_ai_internal hanya berisi file [profil internal] (mis. config/profiles/internal.yaml).
 # v2.4: jalur prototipe ditambahkan (ROADMAP.md §3A); tidak ada berkas baru, tanda [inti]/[profil]/[bersama] tetap.
 # v2.5: tidak ada berkas baru; tanda [inti]/[profil]/[bersama] tetap.
+# v2.6: tidak ada berkas baru; tanda [inti]/[profil]/[bersama] tetap.
 # Berkas utama per fase jalur prototipe. Berkas MVP lain (mis. pages/, app.py, config/litellm.yaml, foundation/audit_trail.py, foundation/llm.py, requirements.lock) tidak dibuat di prototipe; berkas pendukung (mis. pyproject.toml) mengikuti kebutuhan.
 #   F0: semua berkas bertanda (F0) di pohon.
 #   F1: audit_ai/foundation/{profiles,ingest,canonical,numbering,gates,synthetic}.py; config/sources/vynfi_3yr.yaml; config/synthetic.yaml; tests/.
@@ -15,9 +16,9 @@
 #   F6: audit_ai/mcp_server.py dengan 4 alat (run_je_tests, methodology_search, validate_citations, discover_process); P04 lewat skrip.
 audit_ai_toolkit/
 ├── .claude/                         # [inti] konfigurasi Claude Code proyek (F0); jadi plugin di F6
-│   ├── settings.json                # aturan izin + sandbox Bash + hook: satpam data tiga lapis; data/internal/ dan data/firma/ diblok di semua profil (v2.3); sandbox dengan tiga setting (sandbox.enabled, sandbox.failIfUnavailable, sandbox.allowUnsandboxedCommands = false), hanya WSL2/Linux/macOS (v2.4)
+│   ├── settings.json                # aturan izin + sandbox Bash + hook: satpam data tiga lapis; data/internal/ dan data/firma/ diblok di semua profil (v2.3); sandbox dengan tiga setting (sandbox.enabled, sandbox.failIfUnavailable, sandbox.allowUnsandboxedCommands = false), hanya WSL2/Linux/macOS (v2.4); mode izin manual (permissions.defaultMode), folder di luar proyek ditolak, hook gagal tertutup (v2.6)
 │   ├── hooks/
-│   │   └── guard_profile_data.sh    # di dalam data/ hanya data/public/ dan data/standards/ yang boleh; data/internal/ dan data/firma/ selalu ditolak (v2.3)
+│   │   └── guard_profile_data.sh    # di dalam data/ hanya data/public/ dan data/standards/ yang boleh; data/internal/ dan data/firma/ selalu ditolak (v2.3); harus berizin eksekusi, bila tidak semua alat Claude Code terkunci (v2.6)
 │   └── skills/
 │       ├── je-testing-spec/SKILL.md         # spesifikasi uji P02 per seri (F2)
 │       ├── materiality-workflow/SKILL.md    # RAG → parameter → konfirmasi → kalkulator (F3)
@@ -119,7 +120,7 @@ audit_ai_toolkit/
 ├── README.md
 ├── requirements.txt                 # 24 paket inti
 ├── requirements.lock                # lock file ber-hash (F1)
-├── ROADMAP.md                       # sumber kebenaran (v2.5)
+├── ROADMAP.md                       # sumber kebenaran (v2.6)
 ├── SEED.md                          # pembuka chat project Claude, per profil
 ├── structure.txt
 └── Summary.xlsx                     # ringkasan per program + daftar CP + profil

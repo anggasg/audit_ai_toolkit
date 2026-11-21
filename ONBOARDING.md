@@ -1,6 +1,6 @@
 # 👋 ONBOARDING — Audit AI Toolkit
 
-_15 November 2026 · Mengikuti ROADMAP v2.5 · Bacaan ±7 menit untuk anggota tim baru. Status terkini selalu ada di `Summary.xlsx` (kolom Status)._
+_21 November 2026 · Mengikuti ROADMAP v2.6 · Bacaan ±7 menit untuk anggota tim baru. Status terkini selalu ada di `Summary.xlsx` (kolom Status)._
 
 ---
 
@@ -50,6 +50,7 @@ _15 November 2026 · Mengikuti ROADMAP v2.5 · Bacaan ±7 menit untuk anggota ti
 2. Taruh file baru di path sesuai structure.txt (perhatikan tanda [inti], [profil], atau [bersama]; tanda ini juga menentukan repo tujuannya, ROADMAP §0); tambah paket hanya lewat requirements.txt, setelah versi dan lisensinya dicek.
 3. Fase selesai bila kriteria lulus CP terpenuhi: isi Status, Tanggal lulus, Bukti, dan Menit nyata di sheet CP, ubah Status program di Sheet1 bila perlu, lalu tutup chat dengan seed `CP<n>-done.md`. Di jalur prototipe, F2–F6 selesai bila kriteria CP-P (checkpoint prototipe) terpenuhi; CP-P lulus tidak menutup CP penuh, dan nama seed serta Status-nya ada di SEED.md §7.
 4. Catatan sandbox: perintah yang menyentuh Docker, PostgreSQL, TEI, MLflow, atau jaringan luar tidak dijalankan lewat sandbox Claude Code, melainkan oleh pengguna di terminal biasa atau lewat awalan `!` di Claude Code. Berkas `.claude/*` dan `.mcp.json` dibuat lewat alat Write/Edit atau oleh pengguna (ROADMAP §3A, §4).
+5. Catatan hook satpam (v2.6): `.claude/hooks/guard_profile_data.sh` harus berizin eksekusi. Bila izin itu hilang (mis. setelah berkas disalin tanpa mempertahankan izin), semua alat Claude Code (Read, Edit, Write, Bash) terkunci. Pulihkan di terminal biasa dengan `chmod 755 ~/audit_ai_toolkit/.claude/hooks/guard_profile_data.sh` (ROADMAP §8).
 
 **Saat keputusan berubah:** ubah ROADMAP.md dulu (naikkan versi), lalu Summary.xlsx, lalu file lain yang terdampak. Rinciannya ada di SEED.md §7.
 
@@ -165,6 +166,8 @@ CP<n>-done.md           seed penutup per CP; membuka chat CP berikutnya (SEED §
 | VS Code | Visual Studio Code | Editor kode yang dipakai proyek |
 | WSL2 | Windows Subsystem for Linux 2 | Linux di dalam Windows |
 | AppArmor | — | Nama fitur keamanan Ubuntu; bisa memblok `bwrap` (alat yang dipakai sandbox Claude Code), juga di WSL2; dicek di F0 (ROADMAP §4, §8) |
+| tmpfs | Temporary File System | Disk sementara di memori; di dalam sandbox, folder home berupa tmpfs, jadi tulisan ke sana hilang dan tidak sampai ke disk asli (ROADMAP §4, §8) |
+| seccomp | Secure Computing Mode | Fitur kernel Linux untuk menyaring panggilan sistem; filter opsionalnya untuk sandbox di WSL2 ditunda (ROADMAP §7, §8) |
 | LTS | Long-Term Support | Rilis Ubuntu yang mendapat pembaruan keamanan jangka panjang; F0 memakai Ubuntu 24.04 LTS (ROADMAP §4, §8) |
 | WIP | Work in Progress | Seed antara `CP<n>-wip.md` bila satu CP butuh lebih dari satu chat |
 | UI | User Interface | Tampilan aplikasi |

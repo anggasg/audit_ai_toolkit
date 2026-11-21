@@ -1,6 +1,6 @@
 # 🔎 Audit AI Toolkit
 
-> Status: **pre-prototipe** (F0 berjalan) — repo publik sudah di-push dengan LICENSE Apache-2.0, belum ada kode program. Urutan kerja, checkpoint, dan jalur prototipe ada di [ROADMAP.md](ROADMAP.md) v2.5; ringkasan per program, checkpoint, dan profil ada di `Summary.xlsx`.  
+> Status: **pre-prototipe** (F0 berjalan) — repo publik sudah di-push dengan LICENSE Apache-2.0, belum ada kode program. Urutan kerja, checkpoint, dan jalur prototipe ada di [ROADMAP.md](ROADMAP.md) v2.6; ringkasan per program, checkpoint, dan profil ada di `Summary.xlsx`.  
 > Orang baru: mulai dari [ONBOARDING.md](ONBOARDING.md), termasuk daftar singkatan. Chat project di Claude dibuka dengan [SEED.md](SEED.md).
 
 **Audit AI Toolkit** membantu auditor menyusun lead sheet dan audit program dari metodologi audit (RAG atas dokumen metodologi), serta menyorot jurnal dan alur transaksi yang tidak biasa dengan statistik robust, process mining, dan machine learning. Satu **inti** netral dipakai di beberapa konteks lewat **profil**.
@@ -41,8 +41,10 @@ Profil `firma` (Firma Level) disiapkan untuk konteks firma. Profil aktif dipilih
 ## 🔒 Aturan Data
 
 - Metodologi dan turunannya tidak menyeberang profil (pengecualian pinjam indeks: ROADMAP §5.1).
-- Development hanya memakai data publik atau sintetis. Di dalam `data/`, Claude Code hanya boleh menyentuh `data/public/` dan `data/standards/`; `data/internal/` dan `data/firma/` diblok di semua profil lewat aturan izin, sandbox Bash, dan hook (`.claude/`).
+- Development hanya memakai data publik atau sintetis. Di dalam `data/`, Claude Code hanya boleh menyentuh `data/public/` dan `data/standards/`; `data/internal/` dan `data/firma/` diblok di semua profil lewat aturan izin, sandbox Bash, dan hook (`.claude/`). Folder di luar proyek yang menyimpan kredensial atau bahan non-publik (konfigurasi GitHub CLI, daftar istilah terlarang, repo privat, drive Windows) juga ditolak (ROADMAP §0).
 - Sandbox Bash (salah satu dari tiga lapis di atas) hanya berjalan di WSL2, Linux, dan macOS; di Windows biasa perintah berjalan tanpa sandbox. Tiga setting di `.claude/settings.json` menjaganya tetap aktif: `sandbox.enabled`, `sandbox.failIfUnavailable`, dan `sandbox.allowUnsandboxedCommands: false` (ROADMAP §0).
+- Mode izin proyek manual (`permissions.defaultMode: "default"`): Claude Code meminta persetujuan sebelum menulis berkas atau menjalankan perintah. Ini mode awal, bukan kunci keras; aturan izin dan sandbox berlaku di semua mode (ROADMAP §0, §8).
+- Hook satpam gagal tertutup: bila `.claude/hooks/guard_profile_data.sh` kehilangan izin eksekusi, semua alat Claude Code terkunci. Pulihkan di terminal biasa: `chmod 755 .claude/hooks/guard_profile_data.sh` (ROADMAP §8).
 - Semua panggilan LLM dari kode proyek lewat gateway LiteLLM, dengan rute yang diizinkan profil. Claude Code sebagai alat development tidak termasuk kode proyek: ia hanya dipakai di profil `public` dengan korpus dan data publik (ROADMAP §2 nomor 2).
 - Secret tidak disimpan di repo (`.env` lokal atau secret manager, sesuai profil).
 - Cek otomatis sebelum push publik menolak istilah dari daftar terlarang yang disimpan di luar repo.
